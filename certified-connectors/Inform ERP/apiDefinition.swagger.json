@@ -1,2424 +1,3029 @@
-swagger: '2.0'
-info:
-  title: Inform API
-  description: >-
-    This document contains the technical overview of the available integration
-    points of the Inform API. Inform ERP API’s are offered through a monthly
-    subscription and fee-based professional services to assist the technical
-    developer in understanding, developing, and troubleshooting integrations
-    built using the Inform API. The Inform API uses JSON (JavaScript Object
-    Notation)
-  version: '2.1'
-  contact:
-    name: Advantive
-    email: ddisystem.development@advantive.com
-    url: https://www.advantive.com/contact/
-host: inform-api-sandbox.azure-api.net
-basePath: /inform
-schemes:
-  - https
-consumes: []
-produces: []
-paths:
-  /datasync/{schemaname}:
-    post:
-      summary: Data Sync
-      description: Data Sync
-      operationId: data-sync
-      consumes:
-        - application/json
-      produces:
-        - application/json
-        - application/xml
-        - text/plain
-      parameters:
-        - in: path
-          name: schemaname
-          description: Schema Name
-          required: true
-          type: string
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Data_Sync_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Data_Sync_Response'
-        '400':
-          description: ''
-          examples:
-            text/plain:
-              Error: Message
-        '401':
-          description: ''
-          schema:
-            $ref: '#/definitions/Error'
-        '429':
-          description: ''
-          schema:
-            $ref: '#/definitions/Error'
-          examples:
-            application/json:
-              statusCode: 0
-              message: string
-  /hooks/register:
-    post:
-      summary: Register Hook
-      description: Registers a webhook
-      operationId: register-hook
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Register_Hook'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Register_Hook_Response'
-  /hooks/delete:
-    post:
-      summary: Delete Hook
-      description: Deletes a webhook
-      operationId: delete-hook
-      responses:
-        '200':
-          description: 'null'
-  /hooks/triggered:
-    post:
-      summary: Triggered Hook
-      operationId: triggered-hook
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Triggered_Hook'
-      responses:
-        '200':
-          description: ''
-  /datasync/ecommpro_createacct:
-    post:
-      summary: Create Account
-      description: 'Used to create a new “Point Of Sale” account in Inform. '
-      operationId: create-account
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Valiate_User_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Validate_User_Response'
-  /datasync/ecommpro_custledger:
-    post:
-      summary: Customer Ledger
-      description: Used to return high level A/R financials for an account.
-      operationId: customer-ledger
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Customer_Ledger_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Customer_Ledger_Response'
-  /datasync/ecommpro_orderlist:
-    post:
-      summary: Order List
-      operationId: order-list
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Order_List_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Order_List_Response'
-  /datasync/ecommpro_orderdetail:
-    post:
-      summary: Order Detail
-      operationId: order-detail
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Order_Detail_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Order_Detail_Response'
-  /datasync/ecommpro_pricestock:
-    post:
-      summary: Price Stock
-      description: >-
-        Price and Stock uses the Inform price matrix to return real-time,
-        customer-specific pricing, including quantity breaks. Stock information
-        can be returned for all active warehouses, or only the default warehouse
-        for the specified branch.  For a list of products use the itemList
-        array. For Price / Stock you have 2 options that relate to price. If you
-        use “accountNumber": "ECOMM" the price returned will be the guest “web
-        price” assigned in Inform.  Usually, L1 guest pricing and not customer
-        specific.  No token is required as the shopper has not logged in yet. If
-        you use an "accountNumber" and a "userId" (the account number and user
-        id returned in the validate user) along with the token, then you will
-        get the specific pricing assigned to that account. The inventory amount
-        returned is the same for either option.  If you are just doing inventory
-        then simple web price approach will be faster.
-      operationId: price-stock
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Price_Stock_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Price_Stock_Response'
-  /datasync/ecommpro_invoicelist:
-    post:
-      summary: Invoice List
-      operationId: invoice-list
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Invoice_List_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Invoice_List_Response'
-  /datasync/ecommpro_invoicedetail:
-    post:
-      summary: Invoice Detail
-      operationId: invoice-detail
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Invoice_Detail_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Invoice_Detail_Response'
-  /datasync/ecommpro_submitorder:
-    post:
-      summary: Submit Order
-      description: Will create a new sales order
-      operationId: submit-order
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Submit_Order_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Submit_Order_Response'
-  /datasync/ecommpro_submitpayment:
-    post:
-      summary: Submit Payment
-      description: >-
-        Before this can be used, the Inform customer must have this chargeable
-        feature enabled. This is for the end-user to ‘pay’ their open invoices
-        using a credit card.  This API uses Credit Card information provided by
-        your credit card processing company and applies to invoices.  It is the
-        user’s responsibility to ensure the invoice number being marked as paid
-        is an open invoice.  DDI does not confirm payment, only records the
-        results provided in the API. 
-      operationId: submit-payment
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Submit_Payment_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Submit_Payment_Response'
-  /datasync/ecommpro_shipto:
-    post:
-      summary: Shipto
-      operationId: shipto
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Shipto_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Shipto_Response'
-  /datasync/ecommpro_orderpad:
-    post:
-      summary: Order Pad
-      operationId: order-pad
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Order_Pad_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Order_Pad_Response'
-  /datasync/ecommpro_validateuser:
-    post:
-      summary: Validate User
-      description: >-
-        Used to validate an email address against the contacts in Inform. 
-        Response contains a session token, and information, requirements,
-        permissions from the Inform Contact screen, and associated Customer/Ship
-        To screens.  userName, password, and passphrase will be provided by DDI
-        System.  These 3 fields in addition to the token will be used for
-        subsequent API calls during the session. 
-      operationId: validate-user
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/Valiate_User_Request'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/Validate_User_Response'
-definitions:
-  Error:
-    type: object
-    properties:
-      statusCode:
-        type: integer
-      message:
-        type: string
-    example:
-      statusCode: 0
-      message: string
-  Data_Sync_Request:
-    required:
-      - DDIRequest
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-    example:
-      DDIRequest: {}
-    x-apim-schema-name: Data Sync Request
-  Data_Sync_Response:
-    required:
-      - DDIResponse
-    type: object
-    properties:
-      DDIResponse:
-        required:
-          - schema
-          - isValid
-        type: object
-        properties:
-          schema:
-            type: string
-          isValid:
-            description: Whether or not the request was successful
-            type: string
-          errorMessage:
-            description: If the request was unsuccessful, the message indicating why
-            type: string
-    example:
-      DDIResponse:
-        isValid: string
-        errorMessage: string
-    x-apim-schema-name: Data Sync Response
-  Valiate_User_Request:
-    required:
-      - DDIRequest
-    type: object
-    properties:
-      DDIRequest:
-        required:
-          - userName
-          - password
-          - passPhrase
-          - contactName
-        type: object
-        properties:
-          userName:
-            description: API username provided by DDI
-            type: string
-          password:
-            description: API password provided by DDI
-            type: string
-          passPhrase:
-            description: API passphrase provided by DDI
-            type: string
-          contactName:
-            description: The email address of the contact record
-            type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        contactName: string
-    x-apim-schema-name: Valiate User Request
-  Validate_User_Response:
-    required:
-      - DDIResponse
-    type: object
-    properties:
-      DDIResponse:
-        required:
-          - isValid
-          - token
-          - branch
-          - user
-        type: object
-        properties:
-          isValid:
-            description: \'yes\' if the username, password, passPhrase are valid
-            type: string
-          token:
-            description: Token associated to the user/account for subsequent calls
-            type: string
-          errorMessage:
-            type: string
-          branch:
-            description: Default branch assigned to the account
-            type: string
-          user:
-            description: >-
-              Contains the array elements for each account the active user is
-              on.  If the contactName (email) is not found on any active account
-              the user element will be empty.
-            type: array
-            items:
-              required:
-                - userId
-                - userName
-                - firstName
-                - lastName
-                - email
-                - viewOrderPad
-                - payOnline
-                - allowManualShipto
-                - viewSalesOrder
-                - viewInvoice
-                - accountNumber
-                - requirePO
-                - requireShipVia
-                - requireShipDate
-                - requireBuyer
-                - defaultShipMethod
-                - defaultShipMethodDesc
-                - allowOnAccount
-                - allowQuote
-                - allowOrderFromQuote
-                - approveSalesOrder
-                - orderPadOnly
-                - billCompanyName
-                - billAddress1
-                - billAddress2
-                - billAddress3
-                - billCity
-                - billState
-                - billPostCode
-                - billCountry
-                - billPhone
-                - billFax
-                - shiptoId
-                - shipCompanyName
-                - shipAddress1
-                - shipAddress2
-                - shipAddress3
-                - shipCity
-                - shipState
-                - shipPostalCode
-                - shipCountry
-                - shipPhone
-                - shipFax
-              type: object
-              properties:
-                userId:
-                  description: >-
-                    Internal numeric key for this contact record. Needed for
-                    further requests
-                  type: string
-                userName:
-                  description: Not assigned at this time
-                  type: string
-                firstName:
-                  description: Contact first name
-                  type: string
-                lastName:
-                  description: Contact last name
-                  type: string
-                email:
-                  description: Email address on the contact record in Inform
-                  type: string
-                viewOrderPad:
-                  description: If yes, the user can see the Inform Order Pad
-                  type: string
-                payOnline:
-                  description: If yes, the user can pay invoices online
-                  type: string
-                allowManualShipto:
-                  description: If yes, a manual ship to can be entered
-                  type: string
-                viewSalesOrder:
-                  description: If yes, the user can view Sales Orders on "My Account" page
-                  type: string
-                viewInvoice:
-                  description: If yes, the user can view Invoices on "My Account" page
-                  type: string
-                accountNumber:
-                  description: >-
-                    The Inform customer number associated with this contact.
-                    Needed for further requests.
-                  type: string
-                requirePO:
-                  description: >-
-                    Cust P/O \# Req field. If yes, a customer PO number is
-                    required when placing an order.
-                  type: string
-                requireShipVia:
-                  description: Mandatory in S/O – Ship Via (Y/N)
-                  type: string
-                requireShipDate:
-                  description: Mandatory in S/O – Ship Date (Y/N)
-                  type: string
-                requireBuyer:
-                  description: Require Ordered By
-                  type: string
-                defaultShipMethod:
-                  description: Ship Via code
-                  type: string
-                defaultShipMethodDesc:
-                  description: Ship Via description
-                  type: string
-                allowOnAccount:
-                  description: If no, user must pay online.  Based on Terms field
-                  type: string
-                allowQuote:
-                  description: If yes, user can request quote from shopping card
-                  type: string
-                allowOrderFromQuote:
-                  description: >-
-                    If yes, user can complete order from quote on "My Account"
-                    page
-                  type: string
-                approveSalesOrder:
-                  description: If yes, user can enter order and/or approve order for others
-                  type: string
-                orderPadOnly:
-                  description: If yes, user can only order item on the Order Pad
-                  type: string
-                billCompanyName:
-                  description: Customer Remit To Address, Name
-                  type: string
-                billAddress1:
-                  description: Customer Remit to Address, Address
-                  type: string
-                billAddress2:
-                  description: Customer Remit to Address, Line 2
-                  type: string
-                billAddress3:
-                  description: Customer Remit to Address, Line 3
-                  type: string
-                billCity:
-                  description: Customer Remit to Address, City
-                  type: string
-                billState:
-                  description: Customer Remit to Address, State
-                  type: string
-                billPostCode:
-                  description: Customer Remit to Address, Zip Code
-                  type: string
-                billCountry:
-                  description: Customer Remit to Address, County
-                  type: string
-                billPhone:
-                  description: Additional Information, Phone
-                  type: string
-                billFax:
-                  description: Additional Information, Fax
-                  type: string
-                shiptoId:
-                  type: string
-                shipCompanyName:
-                  type: string
-                shipAddress1:
-                  type: string
-                shipAddress2:
-                  type: string
-                shipAddress3:
-                  type: string
-                shipCity:
-                  type: string
-                shipState:
-                  type: string
-                shipPostalCode:
-                  type: string
-                shipCountry:
-                  type: string
-                shipPhone:
-                  type: string
-                shipFax:
-                  type: string
-    example:
-      DDIResponse:
-        isValid: string
-        token: string
-        errorMessage: string
-        branch: string
-        user:
-          - userId: string
-            userName: string
-            firstName: string
-            lastName: string
-            email: string
-            viewOrderPad: string
-            payOnline: string
-            allowManualShipto: string
-            viewSalesOrder: string
-            viewInvoice: string
-            accountNumber: string
-            requirePO: string
-            requireShipVia: string
-            requireShipDate: string
-            requireBuyer: string
-            defaultShipMethod: string
-            defaultShipMethodDesc: string
-            allowOnAccount: string
-            allowQuote: string
-            allowOrderFromQuote: string
-            approveSalesOrder: string
-            orderPadOnly: string
-            billCompanyName: string
-            billAddress1: string
-            billAddress2: string
-            billAddress3: string
-            billCity: string
-            billState: string
-            billPostCode: string
-            billCountry: string
-            billPhone: string
-            billFax: string
-            shiptoId: string
-            shipCompanyName: string
-            shipAddress1: string
-            shipAddress2: string
-            shipAddress3: string
-            shipCity: string
-            shipState: string
-            shipPostalCode: string
-            shipCountry: string
-            shipPhone: string
-            shipFax: string
-    x-apim-schema-name: Validate User Response
-  Submit_Order_Request:
-    type: object
-    properties:
-      DDIRequest:
-        required:
-          - token
-          - accountNumber
-          - user
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          branch:
-            type: string
-          accountNumber:
-            type: string
-          user:
-            required:
-              - userId
-            type: object
-            properties:
-              userId:
-                type: string
-              userName:
-                type: string
-              firstName:
-                type: string
-              lastName:
-                type: string
-              email:
-                type: string
-          purchaseOrder:
-            type: string
-          jobName:
-            type: string
-          mobilePhone:
-            type: string
-          specialInstructions:
-            type: string
-          freightCharge:
-            type: string
-          miscellaneousChargeCode:
-            type: string
-          miscellaneousCharge:
-            type: string
-          emailCC:
-            type: string
-          shipMethod:
-            type: string
-          billAttention:
-            type: string
-          shipAddress:
-            type: object
-            properties:
-              shipId:
-                type: string
-              shipCompanyName:
-                type: string
-              shipAddress1:
-                type: string
-              shipAddress2:
-                type: string
-              shipAddress3:
-                type: string
-              shipCity:
-                type: string
-              shipState:
-                type: string
-              shipPostCode:
-                type: string
-              shipCountry:
-                type: string
-              shipPhone:
-                type: string
-              shipFax:
-                type: string
-              shipAttention:
-                type: string
-              quoteRequest:
-                type: string
-              validateOnly:
-                type: string
-          lineItems:
-            type: object
-            properties:
-              itemData:
-                type: array
-                items:
-                  required:
-                    - stockNum
-                    - qty
-                  type: object
-                  properties:
-                    stockNum:
-                      type: string
-                    qty:
-                      type: string
-                    uom:
-                      type: string
-                    price:
-                      type: string
-                    mfgNum:
-                      type: string
-                    description:
-                      type: string
-                    lineComment:
-                      type: string
-          backOrderMethod:
-            type: string
-          orderType:
-            type: string
-          orderTypeDescription:
-            type: string
-          emailTo:
-            type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        branch: string
-        accountNumber: string
-        user:
-          userId: string
-          userName: string
-          firstName: string
-          lastName: string
-          email: string
-        purchaseOrder: string
-        jobName: string
-        mobilePhone: string
-        specialInstructions: string
-        freightCharge: string
-        miscellaneousChargeCode: string
-        miscellaneousCharge: string
-        emailCC: string
-        shipMethod: string
-        billAttention: string
-        shipAddress:
-          shipId: string
-          shipCompanyName: string
-          shipAddress1: string
-          shipAddress2: string
-          shipAddress3: string
-          shipCity: string
-          shipState: string
-          shipPostCode: string
-          shipCountry: string
-          shipPhone: string
-          shipFax: string
-          shipAttention: string
-          quoteRequest: string
-          validateOnly: string
-        lineItems:
-          itemData:
-            - stockNum: string
-              qty: string
-              uom: string
-              price: string
-              mfgNum: string
-              description: string
-              lineComment: string
-        backOrderMethod: string
-        orderType: string
-        orderTypeDescription: string
-        emailTo: string
-    x-apim-schema-name: Submit Order Request
-  Submit_Order_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            description: If the request was successful or not
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          orderNumber:
-            type: string
-          orderToken:
-            type: string
-          DDIConfirmation:
-            type: object
-            properties:
-              shipAddress:
-                type: object
-                properties:
-                  shipNumber:
-                    type: string
-                  shipCompanyName:
-                    type: string
-                  shipAddress1:
-                    type: string
-                  shipAddress2:
-                    type: string
-                  shipAddress3:
-                    type: string
-                  shipCity:
-                    type: string
-                  shipState:
-                    type: string
-                  shipPostCode:
-                    type: string
-                  shipCountry:
-                    type: string
-                  shipPhone:
-                    type: string
-                  shipFax:
-                    type: string
-                  shipAttention:
-                    type: string
-              billCompanyName:
-                type: string
-              billAddress1:
-                type: string
-              billAddress2:
-                type: string
-              billAddress3:
-                type: string
-              billCity:
-                type: string
-              billState:
-                type: string
-              billPostCode:
-                type: string
-              billPhone:
-                type: string
-              billFax:
-                type: string
-              billAttentions:
-                type: string
-          orderDetails:
-            type: object
-            properties:
-              buyerName:
-                type: string
-              poNum:
-                type: string
-              jobName:
-                type: string
-              orderDate:
-                type: string
-              shipDate:
-                type: string
-              warehouse:
-                type: string
-              status:
-                type: string
-              ccEmail:
-                type: string
-              merchandiseTotal:
-                type: string
-              miscellaneousTotal:
-                type: string
-              freightTotal:
-                type: string
-              taxTotal:
-                type: string
-              orderTotal:
-                type: string
-              specialInstructions:
-                type: string
-              shipVia:
-                type: string
-              shipViaDescription:
-                type: string
-              truckDeliveryDays:
-                type: string
-      lineItems:
-        type: object
-        properties:
-          lineData:
-            type: array
-            items:
-              required:
-                - stockNum
-                - requestNum
-                - mfgNum
-                - description
-                - uom
-                - qty
-                - shipqty
-                - boqty
-                - netPrice
-                - extendedPrice
-                - availMessage
-                - lineComment
-              type: object
-              properties:
-                stockNum:
-                  type: string
-                requestNum:
-                  type: string
-                mfgNum:
-                  type: string
-                description:
-                  type: string
-                uom:
-                  type: string
-                qty:
-                  type: string
-                shipqty:
-                  type: string
-                boqty:
-                  type: string
-                netPrice:
-                  type: string
-                extendedPrice:
-                  type: string
-                availMessage:
-                  type: string
-                lineComment:
-                  type: string
-    example:
-      DDIResponse:
-        isValid: string
-        accountNumber: string
-        branch: string
-        orderNumber: string
-        orderToken: string
-        DDIConfirmation:
-          shipAddress:
-            shipNumber: string
-            shipCompanyName: string
-            shipAddress1: string
-            shipAddress2: string
-            shipAddress3: string
-            shipCity: string
-            shipState: string
-            shipPostCode: string
-            shipCountry: string
-            shipPhone: string
-            shipFax: string
-            shipAttention: string
-          billCompanyName: string
-          billAddress1: string
-          billAddress2: string
-          billAddress3: string
-          billCity: string
-          billState: string
-          billPostCode: string
-          billPhone: string
-          billFax: string
-          billAttentions: string
-        orderDetails:
-          buyerName: string
-          poNum: string
-          jobName: string
-          orderDate: string
-          shipDate: string
-          warehouse: string
-          status: string
-          ccEmail: string
-          merchandiseTotal: string
-          miscellaneousTotal: string
-          freightTotal: string
-          taxTotal: string
-          orderTotal: string
-          specialInstructions: string
-          shipVia: string
-          shipViaDescription: string
-          truckDeliveryDays: string
-      lineItems:
-        lineData:
-          - stockNum: string
-            requestNum: string
-            mfgNum: string
-            description: string
-            uom: string
-            qty: string
-            shipqty: string
-            boqty: string
-            netPrice: string
-            extendedPrice: string
-            availMessage: string
-            lineComment: string
-    x-apim-schema-name: Submit Order Response
-  Price_Stock_Request:
-    type: object
-    properties:
-      DDIRequest:
-        required:
-          - accountNumber
-          - itemList
-        type: object
-        properties:
-          userName:
-            description: API username provided by DDI
-            type: string
-          password:
-            description: API password provided by DDI
-            type: string
-          passPhrase:
-            description: API passphrase provided by DDI
-            type: string
-          token:
-            description: Token returned from the Validate User call
-            type: string
-          userId:
-            description: The contact number returned from the Validate User call
-            type: string
-          accountNumber:
-            description: The account number returned from the Validate User call
-            type: string
-          branch:
-            description: The branch number returned from the Validate User call
-            type: string
-          allWarehouse:
-            description: >-
-              Include stock for all warehouses, not just the warehouse
-              associated to the branch number returned from the Validate User
-              call
-            type: string
-          priceOnly:
-            description: Set to "N"
-            type: string
-          stockOnly:
-            description: Set to "N"
-            type: string
-          itemList:
-            description: Array of product codes and quantity
-            type: array
-            items:
-              required:
-                - stockNum
-              type: object
-              properties:
-                stockNum:
-                  description: The product code you are checking price and stock for
-                  type: string
-                quantity:
-                  description: The intended purchase quantity (default to 1)
-                  type: string
-    example:
-      DDIRequest:
-        userName: ThirdPartyName
-        password: xxPasswordxx
-        passPhrase: xxPassPhrasexx
-        token: VTJTYWx0ZWTJ8Dd8yHR3D+zkr346ADozZ8ho5PcR9MblrD8Td6jzKA==
-        userId: '0004'
-        accountNumber: '0001588'
-        branch: '01'
-        allWarehouse: 'Y'
-        priceOnly: 'N'
-        stockOnly: 'N'
-        itemList:
-          - stockNum: BPC T16SMILEY
-            quantity: '1'
-    x-apim-schema-name: Price Stock Request
-  Price_Stock_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            description: >-
-              Yes if the userId (email address) is found on Active accountNumber
-              Contact record(s) and the token is valid for the session and the
-              request parameters are valid.  No if none of the previous criteria
-              are met.
-            type: string
-          accountNumber:
-            description: Account Number used for requesting price and stock
-            type: string
-          branch:
-            description: Default branch assigned to the account/user
-            type: string
-          itemData:
-            description: >-
-              Contains the array elements of the product code(s) you are
-              checking price and stock for
-            type: array
-            items:
-              required:
-                - lineItem
-                - prices
-              type: object
-              properties:
-                lineItem:
-                  description: Contains information for each individual product code
-                  type: object
-                  properties:
-                    stockNum:
-                      description: Product code returned based on requestNum
-                      type: string
-                    requestNum:
-                      description: This is the product code you requested
-                      type: string
-                    custNum:
-                      description: Customer Part \#
-                      type: string
-                    certCode:
-                      description: Cert Code required to purchase
-                      type: string
-                    uom:
-                      description: Unit of Measures
-                      type: object
-                      properties:
-                        uomCode:
-                          description: Unit of Measure code
-                          type: string
-                        uomDesc:
-                          description: Unit of Measure Description (if available)
-                          type: string
-                        uomFactors:
-                          description: Unit of Measure factor array
-                          type: array
-                          items:
-                            required:
-                              - uomFactor
-                              - altUomCode
-                              - altUomDesc
-                              - price
-                            type: object
-                            properties:
-                              uomFactor:
-                                description: Unit of Measure factor
-                                type: string
-                              altUomCode:
-                                description: Unit of Measure code
-                                type: string
-                              altUomDesc:
-                                description: Unit of Measure Description (if available)
-                                type: string
-                              price:
-                                description: Price associated to unit of measure
-                                type: string
-                    totalAvailable:
-                      description: The quantity "On Hand" at "All Warehouses"
-                      type: string
-                    locations:
-                      description: Contains the array elements for each warehouse
-                      type: array
-                      items:
-                        required:
-                          - available
-                          - backorder
-                          - requestQty
-                          - warehouse
-                          - branchName
-                          - branchAdd1
-                          - branchCity
-                          - branchState
-                          - branchPostCost
-                        type: object
-                        properties:
-                          available:
-                            description: Physical quantity at warehouse
-                            type: string
-                          backorder:
-                            description: Is item on backorder (yes/no)
-                            type: string
-                          requestQty:
-                            description: The intended purchase quantity
-                            type: string
-                          warehouse:
-                            description: The numeric code of the Warehouse
-                            type: string
-                          branchName:
-                            description: The warehouse Full Name
-                            type: string
-                          branchAdd1:
-                            description: Address
-                            type: string
-                          branchCity:
-                            description: City
-                            type: string
-                          branchState:
-                            description: State
-                            type: string
-                          branchPostCost:
-                            description: Zip Code
-                            type: string
-                prices:
-                  description: Price object containing list and net price
-                  type: object
-                  properties:
-                    listPrice:
-                      description: List Price
-                      type: string
-                    netPrice:
-                      description: Net Price
-                      type: string
-    example:
-      DDIResponse:
-        isValid: string
-        accountNumber: string
-        branch: string
-        itemData:
-          - lineItem:
-              stockNum: string
-              requestNum: string
-              custNum: string
-              certCode: string
-              uom:
-                uomCode: string
-                uomDesc: string
-                uomFactors:
-                  - uomFactor: string
-                    altUomCode: string
-                    altUomDesc: string
-                    price: string
-              totalAvailable: string
-              locations:
-                - available: string
-                  backorder: string
-                  requestQty: string
-                  warehouse: string
-                  branchName: string
-                  branchAdd1: string
-                  branchCity: string
-                  branchState: string
-                  branchPostCost: string
-            prices:
-              listPrice: string
-              netPrice: string
-    x-apim-schema-name: Price Stock Response
-  Register_Hook:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          name:
-            type: string
-          event:
-            type: string
-          webhookUrl:
-            type: string
-    example:
-      DDIRequest:
-        name: string
-        event: string
-        webhookUrl: string
-    x-apim-schema-name: Register Hook
-  Register_Hook_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          id:
-            type: string
-          name:
-            type: string
-          event:
-            type: string
-          webhookUrl:
-            type: string
-          createdAt:
-            type: string
-          updatedAt:
-            type: string
-          secret:
-            type: string
-    example:
-      DDIResponse:
-        id: string
-        name: string
-        event: string
-        webhookUrl: string
-        createdAt: string
-        updatedAt: string
-        secret: string
-    x-apim-schema-name: Register Hook Response
-  Triggered_Hook:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          event:
-            type: string
-          parentId:
-            type: string
-          recordId:
-            type: string
-    example:
-      DDIRequest:
-        event: string
-        parentId: string
-        recordId: string
-    x-apim-schema-name: Triggered Hook
-  Customer_Ledger_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          userId:
-            type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        accountNumber: string
-        userId: string
-    x-apim-schema-name: Customer Ledger Request
-  Submit_Payment_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          userId:
-            type: string
-          paymentDate:
-            type: string
-          paymentInfo:
-            type: object
-            properties:
-              cashTendered:
-                type: string
-              methodOfPayment:
-                type: string
-              creditCardType:
-                type: string
-              creditCardNumber:
-                type: string
-              creditCardName:
-                type: string
-              creditCardApprovalCode:
-                type: string
-          invoicesToPay:
-            type: array
-            items:
-              required:
-                - invoiceDate
-                - invoiceNumber
-                - paymentAmount
-              type: object
-              properties:
-                invoiceDate:
-                  type: string
-                invoiceNumber:
-                  type: string
-                paymentAmount:
-                  type: string
-    x-apim-schema-name: Submit Payment Request
-  Submit_Payment_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          branch:
-            type: string
-          submittedPayment:
-            type: array
-            items:
-              required:
-                - accountNumber
-                - customerName
-                - paymentAmount
-              type: object
-              properties:
-                accountNumber:
-                  type: string
-                customerName:
-                  type: string
-                paymentAmount:
-                  type: string
-    x-apim-schema-name: Submit Payment Response
-  Shipto_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          userId:
-            type: string
-    x-apim-schema-name: Shipto Request
-  Shipto_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          accountNumber:
-            type: string
-          userId:
-            type: string
-          shipTos:
-            type: array
-            items:
-              required:
-                - shipNumber
-                - shipCompanyName
-                - shipName
-                - shipAddress1
-                - shipAddress2
-                - shipAddress3
-                - shipCity
-                - shipState
-                - shipPostCode
-                - shipCountry
-                - shipPhone
-                - shipFax
-                - shipMethod
-                - timeDate
-                - approveSalesOrder
-              type: object
-              properties:
-                shipNumber:
-                  type: string
-                shipCompanyName:
-                  type: string
-                shipName:
-                  type: string
-                shipAddress1:
-                  type: string
-                shipAddress2:
-                  type: string
-                shipAddress3:
-                  type: string
-                shipCity:
-                  type: string
-                shipState:
-                  type: string
-                shipPostCode:
-                  type: string
-                shipCountry:
-                  type: string
-                shipPhone:
-                  type: string
-                shipFax:
-                  type: string
-                shipMethod:
-                  type: string
-                timeDate:
-                  type: string
-                approveSalesOrder:
-                  type: string
-    x-apim-schema-name: Shipto Response
-  Invoice_Detail_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          userId:
-            type: string
-          invoiceNumber:
-            type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        accountNumber: string
-        branch: string
-        userId: string
-        invoiceNumber: string
-    x-apim-schema-name: Invoice Detail Request
-  Invoice_Detail_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          invoiceNumber:
-            type: string
-          shipAddress:
-            type: object
-            properties:
-              shipNumber:
-                type: string
-              shipCompanyName:
-                type: string
-              shipAddress1:
-                type: string
-              shipAddress2:
-                type: string
-              shipAddress3:
-                type: string
-              shipCity:
-                type: string
-              shipState:
-                type: string
-              shipPostCode:
-                type: string
-          billAddress:
-            type: object
-            properties:
-              billCompanyName:
-                type: string
-              billAddress1:
-                type: string
-              billAddress2:
-                type: string
-              billAddress3:
-                type: string
-              billCity:
-                type: string
-              billState:
-                type: string
-              billPostCode:
-                type: string
-              billCountry:
-                type: string
-              billPhone:
-                type: string
-              billFax:
-                type: string
-          invoiceDetails:
-            type: object
-            properties:
-              buyerName:
-                type: string
-              poNum:
-                type: string
-              jobName:
-                type: string
-              invoiceDate:
-                type: string
-              shipDate:
-                type: string
-              dueDate:
-                type: string
-              warehouse:
-                type: string
-              invoiceStatus:
-                type: string
-              orderNumber:
-                type: string
-              operator:
-                type: string
-              merchandiseTotal:
-                type: string
-              miscellaneousTotal:
-                type: string
-              freightTotal:
-                type: string
-              taxTotal:
-                type: string
-              invoiceTotal:
-                type: string
-              specialInstructions:
-                type: string
-              shipMethod:
-                type: object
-                properties:
-                  shipVia:
-                    type: string
-                  shipViaDescription:
-                    type: string
-          lineItems:
-            type: object
-            properties:
-              lineData:
-                type: array
-                items:
-                  required:
-                    - stockNum
-                    - mfgNum
-                    - description
-                    - qty
-                    - shipQty
-                    - boQty
-                    - netPrice
-                    - extendedPrice
-                    - lineItemComment
-                    - serialNumbers
-                  type: object
-                  properties:
-                    stockNum:
-                      type: string
-                    mfgNum:
-                      type: string
-                    description:
-                      type: string
-                    qty:
-                      type: string
-                    shipQty:
-                      type: string
-                    boQty:
-                      type: string
-                    netPrice:
-                      type: string
-                    extendedPrice:
-                      type: string
-                    lineItemComment:
-                      type: string
-                    serialNumbers:
-                      type: string
-    example:
-      DDIResponse:
-        isValid: string
-        accountNumber: string
-        branch: string
-        invoiceNumber: string
-        shipAddress:
-          shipNumber: string
-          shipCompanyName: string
-          shipAddress1: string
-          shipAddress2: string
-          shipAddress3: string
-          shipCity: string
-          shipState: string
-          shipPostCode: string
-        billAddress:
-          billCompanyName: string
-          billAddress1: string
-          billAddress2: string
-          billAddress3: string
-          billCity: string
-          billState: string
-          billPostCode: string
-          billCountry: string
-          billPhone: string
-          billFax: string
-        invoiceDetails:
-          buyerName: string
-          poNum: string
-          jobName: string
-          invoiceDate: string
-          shipDate: string
-          dueDate: string
-          warehouse: string
-          invoiceStatus: string
-          orderNumber: string
-          operator: string
-          merchandiseTotal: string
-          miscellaneousTotal: string
-          freightTotal: string
-          taxTotal: string
-          invoiceTotal: string
-          specialInstructions: string
-          shipMethod:
-            shipVia: string
-            shipViaDescription: string
-        lineItems:
-          lineData:
-            - stockNum: string
-              mfgNum: string
-              description: string
-              qty: string
-              shipQty: string
-              boQty: string
-              netPrice: string
-              extendedPrice: string
-              lineItemComment: string
-              serialNumbers: string
-    x-apim-schema-name: Invoice Detail Response
-  Invoice_List_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          userId:
-            type: string
-          openOnly:
-            type: string
-          dateRange:
-            type: object
-            properties:
-              startDate:
-                type: string
-              endDate:
-                type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        accountNumber: string
-        branch: string
-        userId: string
-        openOnly: string
-        dateRange:
-          startDate: string
-          endDate: string
-    x-apim-schema-name: Invoice List Request
-  Invoice_List_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          branch:
-            type: string
-          accountNumber:
-            type: string
-          invoiceList:
-            type: array
-            items:
-              required:
-                - invoiceNumber
-                - poNum
-                - jobName
-                - invoiceDate
-                - shipDate
-                - dueDate
-                - orderNumber
-                - warehouse
-                - invoiceStatus
-                - miscTotal
-                - merchandiseTotal
-                - freightTotal
-                - taxTotal
-                - invoiceTotal
-                - openAmount
-              type: object
-              properties:
-                invoiceNumber:
-                  type: string
-                poNum:
-                  type: string
-                jobName:
-                  type: string
-                invoiceDate:
-                  type: string
-                shipDate:
-                  type: string
-                dueDate:
-                  type: string
-                orderNumber:
-                  type: string
-                warehouse:
-                  type: string
-                invoiceStatus:
-                  type: string
-                miscTotal:
-                  type: string
-                merchandiseTotal:
-                  type: string
-                freightTotal:
-                  type: string
-                taxTotal:
-                  type: string
-                invoiceTotal:
-                  type: string
-                openAmount:
-                  type: string
-    example:
-      DDIResponse:
-        isValid: string
-        branch: string
-        accountNumber: string
-        invoiceList:
-          - invoiceNumber: string
-            poNum: string
-            jobName: string
-            invoiceDate: string
-            shipDate: string
-            dueDate: string
-            orderNumber: string
-            warehouse: string
-            invoiceStatus: string
-            miscTotal: string
-            merchandiseTotal: string
-            freightTotal: string
-            taxTotal: string
-            invoiceTotal: string
-            openAmount: string
-    x-apim-schema-name: Invoice List Response
-  Order_Detail_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          userId:
-            type: string
-          orderNumber:
-            type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        accountNumber: string
-        branch: string
-        userId: string
-        orderNumber: string
-    x-apim-schema-name: Order Detail Request
-  Order_Detail_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          orderNumber:
-            type: string
-          shipAddress:
-            type: object
-            properties:
-              shipNumber:
-                type: string
-              shipCompanyName:
-                type: string
-              shipAddress1:
-                type: string
-              shipAddress2:
-                type: string
-              shipAddress3:
-                type: string
-              shipCity:
-                type: string
-              shipState:
-                type: string
-              shipPostCode:
-                type: string
-          billAddress:
-            type: object
-            properties:
-              billCompanyName:
-                type: string
-              billAddress1:
-                type: string
-              billAddress2:
-                type: string
-              billAddress3:
-                type: string
-              billCity:
-                type: string
-              billState:
-                type: string
-              billPostCode:
-                type: string
-              billCountry:
-                type: string
-              billPhone:
-                type: string
-              billFax:
-                type: string
-          orderDetails:
-            type: object
-            properties:
-              buyerName:
-                type: string
-              poNum:
-                type: string
-              jobName:
-                type: string
-              orderDate:
-                type: string
-              shipDate:
-                type: string
-              warehouse:
-                type: string
-              orderStatus:
-                type: string
-              operator:
-                type: string
-              merchandiseTotal:
-                type: string
-              miscellaneousTotal:
-                type: string
-              freightTotal:
-                type: string
-              taxTotal:
-                type: string
-              orderTotal:
-                type: string
-              specialInstructions:
-                type: string
-              shipMethod:
-                type: object
-                properties:
-                  shipVia:
-                    type: string
-                  shipViaDescription:
-                    type: string
-          lineItems:
-            type: object
-            properties:
-              lineData:
-                type: array
-                items:
-                  required:
-                    - stockNum
-                    - mfgNum
-                    - description
-                    - qty
-                    - shipQty
-                    - boQty
-                    - uom
-                    - netPrice
-                    - extendedPrice
-                    - lineItemComment
-                    - serialNumbers
-                  type: object
-                  properties:
-                    stockNum:
-                      type: string
-                    mfgNum:
-                      type: string
-                    description:
-                      type: string
-                    qty:
-                      type: string
-                    shipQty:
-                      type: string
-                    boQty:
-                      type: string
-                    uom:
-                      type: string
-                    netPrice:
-                      type: string
-                    extendedPrice:
-                      type: string
-                    lineItemComment:
-                      type: string
-                    serialNumbers:
-                      type: string
-    example:
-      DDIResponse:
-        isValid: string
-        accountNumber: string
-        branch: string
-        orderNumber: string
-        shipAddress:
-          shipNumber: string
-          shipCompanyName: string
-          shipAddress1: string
-          shipAddress2: string
-          shipAddress3: string
-          shipCity: string
-          shipState: string
-          shipPostCode: string
-        billAddress:
-          billCompanyName: string
-          billAddress1: string
-          billAddress2: string
-          billAddress3: string
-          billCity: string
-          billState: string
-          billPostCode: string
-          billCountry: string
-          billPhone: string
-          billFax: string
-        orderDetails:
-          buyerName: string
-          poNum: string
-          jobName: string
-          orderDate: string
-          shipDate: string
-          warehouse: string
-          orderStatus: string
-          operator: string
-          merchandiseTotal: string
-          miscellaneousTotal: string
-          freightTotal: string
-          taxTotal: string
-          orderTotal: string
-          specialInstructions: string
-          shipMethod:
-            shipVia: string
-            shipViaDescription: string
-        lineItems:
-          lineData:
-            - stockNum: string
-              mfgNum: string
-              description: string
-              qty: string
-              shipQty: string
-              boQty: string
-              uom: string
-              netPrice: string
-              extendedPrice: string
-              lineItemComment: string
-              serialNumbers: string
-    x-apim-schema-name: Order Detail Response
-  Order_List_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          userId:
-            type: string
-          dateRange:
-            type: object
-            properties:
-              startDate:
-                type: string
-              endDate:
-                type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        accountNumber: string
-        userId: string
-        dateRange:
-          startDate: string
-          endDate: string
-    x-apim-schema-name: Order List Request
-  Order_List_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          branch:
-            type: string
-          accountNumber:
-            type: string
-          orderList:
-            type: array
-            items:
-              required:
-                - orderNumber
-                - poNum
-                - jobName
-                - orderDate
-                - shipDate
-                - invoiceNumber
-                - warehouse
-                - orderStatus
-                - miscTotal
-                - merchandiseTotal
-                - freightTotal
-                - taxTotal
-                - orderTotal
-              type: object
-              properties:
-                orderNumber:
-                  type: string
-                poNum:
-                  type: string
-                jobName:
-                  type: string
-                orderDate:
-                  type: string
-                shipDate:
-                  type: string
-                invoiceNumber:
-                  type: string
-                warehouse:
-                  type: string
-                orderStatus:
-                  type: string
-                miscTotal:
-                  type: string
-                merchandiseTotal:
-                  type: string
-                freightTotal:
-                  type: string
-                taxTotal:
-                  type: string
-                orderTotal:
-                  type: string
-    example:
-      DDIResponse:
-        isValid: string
-        branch: string
-        accountNumber: string
-        orderList:
-          - orderNumber: string
-            poNum: string
-            jobName: string
-            orderDate: string
-            shipDate: string
-            invoiceNumber: string
-            warehouse: string
-            orderStatus: string
-            miscTotal: string
-            merchandiseTotal: string
-            freightTotal: string
-            taxTotal: string
-            orderTotal: string
-    x-apim-schema-name: Order List Response
-  Order_Pad_Request:
-    type: object
-    properties:
-      DDIRequest:
-        type: object
-        properties:
-          userName:
-            type: string
-          password:
-            type: string
-          passPhrase:
-            type: string
-          token:
-            type: string
-          accountNumber:
-            type: string
-          branch:
-            type: string
-          userId:
-            type: string
-          shipNumber:
-            type: string
-    example:
-      DDIRequest:
-        userName: string
-        password: string
-        passPhrase: string
-        token: string
-        accountNumber: string
-        branch: string
-        userId: string
-        shipNumber: string
-    x-apim-schema-name: Order Pad Request
-  Order_Pad_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          totalLines:
-            type: string
-          pagination:
-            type: string
-          orderPad:
-            type: array
-            items:
-              required:
-                - stockNum
-                - description
-                - uom
-                - price
-                - webCategory
-                - webCategoryDesc
-                - lastDate
-                - lastQty
-                - custPartNum
-              type: object
-              properties:
-                stockNum:
-                  type: string
-                description:
-                  type: string
-                uom:
-                  type: string
-                price:
-                  type: string
-                webCategory:
-                  type: string
-                webCategoryDesc:
-                  type: string
-                lastDate:
-                  type: string
-                lastQty:
-                  type: string
-                custPartNum:
-                  type: string
-    example:
-      DDIResponse:
-        isValid: string
-        totalLines: string
-        pagination: string
-        orderPad:
-          - stockNum: string
-            description: string
-            uom: string
-            price: string
-            webCategory: string
-            webCategoryDesc: string
-            lastDate: string
-            lastQty: string
-            custPartNum: string
-    x-apim-schema-name: Order Pad Response
-  Customer_Ledger_Response:
-    type: object
-    properties:
-      DDIResponse:
-        type: object
-        properties:
-          isValid:
-            type: string
-          receivableAging:
-            type: array
-            items:
-              required:
-                - arBalance
-                - oldestOpenInvoiceDays
-                - Current
-                - 30 Days
-                - 60 Days
-                - 90 Days
-                - 120 & Over
-              type: object
-              properties:
-                arBalance:
-                  type: string
-                oldestOpenInvoiceDays:
-                  type: string
-                Current:
-                  type: string
-                30 Days:
-                  type: string
-                60 Days:
-                  type: string
-                90 Days:
-                  type: string
-                120 & Over:
-                  type: string
-    example:
-      DDIResponse:
-        isValid: string
-        receivableAging:
-          - arBalance: string
-            oldestOpenInvoiceDays: string
-            Current: string
-            30 Days: string
-            60 Days: string
-            90 Days: string
-            120 & Over: string
-    x-apim-schema-name: Customer Ledger Response
-parameters: {}
-responses: {}
-securityDefinitions:
-  apiKeyHeader:
-    type: apiKey
-    name: Ocp-Apim-Subscription-Key
-    in: header
-security:
-  - apiKeyHeader: []
-tags: []
-x-ms-openai-manifest:
-  humanName: Inform ERP Connector
-  modelDescription: Manages operations around orders, invoices, pricing, and stock availability
-  contactEmail: ddisystem.development@advantive.com
-  legalUrl: https://www.advantive.com/privacy-policy/
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Inform API",
+    "description" : "This document contains the technical overview of the available integration points of the Inform API. Inform ERP API’s are offered through a monthly subscription and fee-based professional services to assist the technical developer in understanding, developing, and troubleshooting integrations built using the Inform API. The Inform API uses JSON (JavaScript Object Notation)",
+    "version" : "2.1",
+    "contact" : {
+      "name" : "Advantive",
+      "email" : "ddisystem.development@advantive.com",
+      "url" : "https://www.advantive.com/contact/"
+    }
+  },
+  "host" : "inform-api-sandbox.azure-api.net",
+  "basePath" : "/inform",
+  "schemes" : [ "https" ],
+  "consumes" : [ ],
+  "produces" : [ ],
+  "paths" : {
+    "/datasync/{schemaname}" : {
+      "post" : {
+        "summary" : "Data Sync",
+        "description" : "Data Sync",
+        "operationId" : "data-sync",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json", "application/xml", "text/plain" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "schemaname",
+          "description" : "Schema Name",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Data_Sync_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Data_Sync_Response"
+            }
+          },
+          "400" : {
+            "description" : "",
+            "examples" : {
+              "text/plain" : {
+                "Error" : "Message"
+              }
+            }
+          },
+          "401" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "429" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            },
+            "examples" : {
+              "application/json" : {
+                "statusCode" : 0,
+                "message" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hooks/register" : {
+      "post" : {
+        "summary" : "Register Hook",
+        "description" : "Registers a webhook",
+        "operationId" : "register-hook",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Register_Hook"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Register_Hook_Response"
+            }
+          }
+        }
+      }
+    },
+    "/hooks/delete" : {
+      "post" : {
+        "summary" : "Delete Hook",
+        "description" : "Deletes a webhook",
+        "operationId" : "delete-hook",
+        "responses" : {
+          "200" : {
+            "description" : "null"
+          }
+        }
+      }
+    },
+    "/hooks/triggered" : {
+      "post" : {
+        "summary" : "Triggered Hook",
+        "operationId" : "triggered-hook",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Triggered_Hook"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_createacct" : {
+      "post" : {
+        "summary" : "Create Account",
+        "description" : "Used to create a new “Point Of Sale” account in Inform. ",
+        "operationId" : "create-account",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Valiate_User_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Validate_User_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_custledger" : {
+      "post" : {
+        "summary" : "Customer Ledger",
+        "description" : "Used to return high level A/R financials for an account.",
+        "operationId" : "customer-ledger",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Customer_Ledger_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Customer_Ledger_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_orderlist" : {
+      "post" : {
+        "summary" : "Order List",
+        "operationId" : "order-list",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Order_List_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Order_List_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_orderdetail" : {
+      "post" : {
+        "summary" : "Order Detail",
+        "operationId" : "order-detail",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Order_Detail_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Order_Detail_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_pricestock" : {
+      "post" : {
+        "summary" : "Price Stock",
+        "description" : "Price and Stock uses the Inform price matrix to return real-time, customer-specific pricing, including quantity breaks. Stock information can be returned for all active warehouses, or only the default warehouse for the specified branch.  For a list of products use the itemList array. For Price / Stock you have 2 options that relate to price. If you use “accountNumber\": \"ECOMM\" the price returned will be the guest “web price” assigned in Inform.  Usually, L1 guest pricing and not customer specific.  No token is required as the shopper has not logged in yet. If you use an \"accountNumber\" and a \"userId\" (the account number and user id returned in the validate user) along with the token, then you will get the specific pricing assigned to that account. The inventory amount returned is the same for either option.  If you are just doing inventory then simple web price approach will be faster.",
+        "operationId" : "price-stock",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Price_Stock_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Price_Stock_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_invoicelist" : {
+      "post" : {
+        "summary" : "Invoice List",
+        "operationId" : "invoice-list",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Invoice_List_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Invoice_List_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_invoicedetail" : {
+      "post" : {
+        "summary" : "Invoice Detail",
+        "operationId" : "invoice-detail",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Invoice_Detail_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Invoice_Detail_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_submitorder" : {
+      "post" : {
+        "summary" : "Submit Order",
+        "description" : "Will create a new sales order",
+        "operationId" : "submit-order",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Submit_Order_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Submit_Order_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_submitpayment" : {
+      "post" : {
+        "summary" : "Submit Payment",
+        "description" : "Before this can be used, the Inform customer must have this chargeable feature enabled. This is for the end-user to ‘pay’ their open invoices using a credit card.  This API uses Credit Card information provided by your credit card processing company and applies to invoices.  It is the user’s responsibility to ensure the invoice number being marked as paid is an open invoice.  DDI does not confirm payment, only records the results provided in the API. ",
+        "operationId" : "submit-payment",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Submit_Payment_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Submit_Payment_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_shipto" : {
+      "post" : {
+        "summary" : "Shipto",
+        "operationId" : "shipto",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Shipto_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Shipto_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_orderpad" : {
+      "post" : {
+        "summary" : "Order Pad",
+        "operationId" : "order-pad",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Order_Pad_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Order_Pad_Response"
+            }
+          }
+        }
+      }
+    },
+    "/datasync/ecommpro_validateuser" : {
+      "post" : {
+        "summary" : "Validate User",
+        "description" : "Used to validate an email address against the contacts in Inform.  Response contains a session token, and information, requirements, permissions from the Inform Contact screen, and associated Customer/Ship To screens.  userName, password, and passphrase will be provided by DDI System.  These 3 fields in addition to the token will be used for subsequent API calls during the session. ",
+        "operationId" : "validate-user",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Valiate_User_Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Validate_User_Response"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Error" : {
+      "type" : "object",
+      "properties" : {
+        "statusCode" : {
+          "type" : "integer"
+        },
+        "message" : {
+          "type" : "string"
+        }
+      },
+      "example" : {
+        "statusCode" : 0,
+        "message" : "string"
+      }
+    },
+    "Data_Sync_Request" : {
+      "required" : [ "DDIRequest" ],
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object"
+        }
+      },
+      "example" : {
+        "DDIRequest" : { }
+      },
+      "x-apim-schema-name" : "Data Sync Request"
+    },
+    "Data_Sync_Response" : {
+      "required" : [ "DDIResponse" ],
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "required" : [ "schema", "isValid" ],
+          "type" : "object",
+          "properties" : {
+            "schema" : {
+              "type" : "string"
+            },
+            "isValid" : {
+              "description" : "Whether or not the request was successful",
+              "type" : "string"
+            },
+            "errorMessage" : {
+              "description" : "If the request was unsuccessful, the message indicating why",
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "errorMessage" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Data Sync Response"
+    },
+    "Valiate_User_Request" : {
+      "required" : [ "DDIRequest" ],
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "required" : [ "userName", "password", "passPhrase", "contactName" ],
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "description" : "API username provided by DDI",
+              "type" : "string"
+            },
+            "password" : {
+              "description" : "API password provided by DDI",
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "description" : "API passphrase provided by DDI",
+              "type" : "string"
+            },
+            "contactName" : {
+              "description" : "The email address of the contact record",
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "contactName" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Valiate User Request"
+    },
+    "Validate_User_Response" : {
+      "required" : [ "DDIResponse" ],
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "required" : [ "isValid", "token", "branch", "user" ],
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "description" : "\\'yes\\' if the username, password, passPhrase are valid",
+              "type" : "string"
+            },
+            "token" : {
+              "description" : "Token associated to the user/account for subsequent calls",
+              "type" : "string"
+            },
+            "errorMessage" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "description" : "Default branch assigned to the account",
+              "type" : "string"
+            },
+            "user" : {
+              "description" : "Contains the array elements for each account the active user is on.  If the contactName (email) is not found on any active account the user element will be empty.",
+              "type" : "array",
+              "items" : {
+                "required" : [ "userId", "userName", "firstName", "lastName", "email", "viewOrderPad", "payOnline", "allowManualShipto", "viewSalesOrder", "viewInvoice", "accountNumber", "requirePO", "requireShipVia", "requireShipDate", "requireBuyer", "defaultShipMethod", "defaultShipMethodDesc", "allowOnAccount", "allowQuote", "allowOrderFromQuote", "approveSalesOrder", "orderPadOnly", "billCompanyName", "billAddress1", "billAddress2", "billAddress3", "billCity", "billState", "billPostCode", "billCountry", "billPhone", "billFax", "shiptoId", "shipCompanyName", "shipAddress1", "shipAddress2", "shipAddress3", "shipCity", "shipState", "shipPostalCode", "shipCountry", "shipPhone", "shipFax" ],
+                "type" : "object",
+                "properties" : {
+                  "userId" : {
+                    "description" : "Internal numeric key for this contact record. Needed for further requests",
+                    "type" : "string"
+                  },
+                  "userName" : {
+                    "description" : "Not assigned at this time",
+                    "type" : "string"
+                  },
+                  "firstName" : {
+                    "description" : "Contact first name",
+                    "type" : "string"
+                  },
+                  "lastName" : {
+                    "description" : "Contact last name",
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "description" : "Email address on the contact record in Inform",
+                    "type" : "string"
+                  },
+                  "viewOrderPad" : {
+                    "description" : "If yes, the user can see the Inform Order Pad",
+                    "type" : "string"
+                  },
+                  "payOnline" : {
+                    "description" : "If yes, the user can pay invoices online",
+                    "type" : "string"
+                  },
+                  "allowManualShipto" : {
+                    "description" : "If yes, a manual ship to can be entered",
+                    "type" : "string"
+                  },
+                  "viewSalesOrder" : {
+                    "description" : "If yes, the user can view Sales Orders on \"My Account\" page",
+                    "type" : "string"
+                  },
+                  "viewInvoice" : {
+                    "description" : "If yes, the user can view Invoices on \"My Account\" page",
+                    "type" : "string"
+                  },
+                  "accountNumber" : {
+                    "description" : "The Inform customer number associated with this contact. Needed for further requests.",
+                    "type" : "string"
+                  },
+                  "requirePO" : {
+                    "description" : "Cust P/O \\# Req field. If yes, a customer PO number is required when placing an order.",
+                    "type" : "string"
+                  },
+                  "requireShipVia" : {
+                    "description" : "Mandatory in S/O – Ship Via (Y/N)",
+                    "type" : "string"
+                  },
+                  "requireShipDate" : {
+                    "description" : "Mandatory in S/O – Ship Date (Y/N)",
+                    "type" : "string"
+                  },
+                  "requireBuyer" : {
+                    "description" : "Require Ordered By",
+                    "type" : "string"
+                  },
+                  "defaultShipMethod" : {
+                    "description" : "Ship Via code",
+                    "type" : "string"
+                  },
+                  "defaultShipMethodDesc" : {
+                    "description" : "Ship Via description",
+                    "type" : "string"
+                  },
+                  "allowOnAccount" : {
+                    "description" : "If no, user must pay online.  Based on Terms field",
+                    "type" : "string"
+                  },
+                  "allowQuote" : {
+                    "description" : "If yes, user can request quote from shopping card",
+                    "type" : "string"
+                  },
+                  "allowOrderFromQuote" : {
+                    "description" : "If yes, user can complete order from quote on \"My Account\" page",
+                    "type" : "string"
+                  },
+                  "approveSalesOrder" : {
+                    "description" : "If yes, user can enter order and/or approve order for others",
+                    "type" : "string"
+                  },
+                  "orderPadOnly" : {
+                    "description" : "If yes, user can only order item on the Order Pad",
+                    "type" : "string"
+                  },
+                  "billCompanyName" : {
+                    "description" : "Customer Remit To Address, Name",
+                    "type" : "string"
+                  },
+                  "billAddress1" : {
+                    "description" : "Customer Remit to Address, Address",
+                    "type" : "string"
+                  },
+                  "billAddress2" : {
+                    "description" : "Customer Remit to Address, Line 2",
+                    "type" : "string"
+                  },
+                  "billAddress3" : {
+                    "description" : "Customer Remit to Address, Line 3",
+                    "type" : "string"
+                  },
+                  "billCity" : {
+                    "description" : "Customer Remit to Address, City",
+                    "type" : "string"
+                  },
+                  "billState" : {
+                    "description" : "Customer Remit to Address, State",
+                    "type" : "string"
+                  },
+                  "billPostCode" : {
+                    "description" : "Customer Remit to Address, Zip Code",
+                    "type" : "string"
+                  },
+                  "billCountry" : {
+                    "description" : "Customer Remit to Address, County",
+                    "type" : "string"
+                  },
+                  "billPhone" : {
+                    "description" : "Additional Information, Phone",
+                    "type" : "string"
+                  },
+                  "billFax" : {
+                    "description" : "Additional Information, Fax",
+                    "type" : "string"
+                  },
+                  "shiptoId" : {
+                    "type" : "string"
+                  },
+                  "shipCompanyName" : {
+                    "type" : "string"
+                  },
+                  "shipAddress1" : {
+                    "type" : "string"
+                  },
+                  "shipAddress2" : {
+                    "type" : "string"
+                  },
+                  "shipAddress3" : {
+                    "type" : "string"
+                  },
+                  "shipCity" : {
+                    "type" : "string"
+                  },
+                  "shipState" : {
+                    "type" : "string"
+                  },
+                  "shipPostalCode" : {
+                    "type" : "string"
+                  },
+                  "shipCountry" : {
+                    "type" : "string"
+                  },
+                  "shipPhone" : {
+                    "type" : "string"
+                  },
+                  "shipFax" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "token" : "string",
+          "errorMessage" : "string",
+          "branch" : "string",
+          "user" : [ {
+            "userId" : "string",
+            "userName" : "string",
+            "firstName" : "string",
+            "lastName" : "string",
+            "email" : "string",
+            "viewOrderPad" : "string",
+            "payOnline" : "string",
+            "allowManualShipto" : "string",
+            "viewSalesOrder" : "string",
+            "viewInvoice" : "string",
+            "accountNumber" : "string",
+            "requirePO" : "string",
+            "requireShipVia" : "string",
+            "requireShipDate" : "string",
+            "requireBuyer" : "string",
+            "defaultShipMethod" : "string",
+            "defaultShipMethodDesc" : "string",
+            "allowOnAccount" : "string",
+            "allowQuote" : "string",
+            "allowOrderFromQuote" : "string",
+            "approveSalesOrder" : "string",
+            "orderPadOnly" : "string",
+            "billCompanyName" : "string",
+            "billAddress1" : "string",
+            "billAddress2" : "string",
+            "billAddress3" : "string",
+            "billCity" : "string",
+            "billState" : "string",
+            "billPostCode" : "string",
+            "billCountry" : "string",
+            "billPhone" : "string",
+            "billFax" : "string",
+            "shiptoId" : "string",
+            "shipCompanyName" : "string",
+            "shipAddress1" : "string",
+            "shipAddress2" : "string",
+            "shipAddress3" : "string",
+            "shipCity" : "string",
+            "shipState" : "string",
+            "shipPostalCode" : "string",
+            "shipCountry" : "string",
+            "shipPhone" : "string",
+            "shipFax" : "string"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Validate User Response"
+    },
+    "Submit_Order_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "required" : [ "token", "accountNumber", "user" ],
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "user" : {
+              "required" : [ "userId" ],
+              "type" : "object",
+              "properties" : {
+                "userId" : {
+                  "type" : "string"
+                },
+                "userName" : {
+                  "type" : "string"
+                },
+                "firstName" : {
+                  "type" : "string"
+                },
+                "lastName" : {
+                  "type" : "string"
+                },
+                "email" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "purchaseOrder" : {
+              "type" : "string"
+            },
+            "jobName" : {
+              "type" : "string"
+            },
+            "mobilePhone" : {
+              "type" : "string"
+            },
+            "specialInstructions" : {
+              "type" : "string"
+            },
+            "freightCharge" : {
+              "type" : "string"
+            },
+            "miscellaneousChargeCode" : {
+              "type" : "string"
+            },
+            "miscellaneousCharge" : {
+              "type" : "string"
+            },
+            "emailCC" : {
+              "type" : "string"
+            },
+            "shipMethod" : {
+              "type" : "string"
+            },
+            "billAttention" : {
+              "type" : "string"
+            },
+            "shipAddress" : {
+              "type" : "object",
+              "properties" : {
+                "shipId" : {
+                  "type" : "string"
+                },
+                "shipCompanyName" : {
+                  "type" : "string"
+                },
+                "shipAddress1" : {
+                  "type" : "string"
+                },
+                "shipAddress2" : {
+                  "type" : "string"
+                },
+                "shipAddress3" : {
+                  "type" : "string"
+                },
+                "shipCity" : {
+                  "type" : "string"
+                },
+                "shipState" : {
+                  "type" : "string"
+                },
+                "shipPostCode" : {
+                  "type" : "string"
+                },
+                "shipCountry" : {
+                  "type" : "string"
+                },
+                "shipPhone" : {
+                  "type" : "string"
+                },
+                "shipFax" : {
+                  "type" : "string"
+                },
+                "shipAttention" : {
+                  "type" : "string"
+                },
+                "quoteRequest" : {
+                  "type" : "string"
+                },
+                "validateOnly" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "lineItems" : {
+              "type" : "object",
+              "properties" : {
+                "itemData" : {
+                  "type" : "array",
+                  "items" : {
+                    "required" : [ "stockNum", "qty" ],
+                    "type" : "object",
+                    "properties" : {
+                      "stockNum" : {
+                        "type" : "string"
+                      },
+                      "qty" : {
+                        "type" : "string"
+                      },
+                      "uom" : {
+                        "type" : "string"
+                      },
+                      "price" : {
+                        "type" : "string"
+                      },
+                      "mfgNum" : {
+                        "type" : "string"
+                      },
+                      "description" : {
+                        "type" : "string"
+                      },
+                      "lineComment" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "backOrderMethod" : {
+              "type" : "string"
+            },
+            "orderType" : {
+              "type" : "string"
+            },
+            "orderTypeDescription" : {
+              "type" : "string"
+            },
+            "emailTo" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "branch" : "string",
+          "accountNumber" : "string",
+          "user" : {
+            "userId" : "string",
+            "userName" : "string",
+            "firstName" : "string",
+            "lastName" : "string",
+            "email" : "string"
+          },
+          "purchaseOrder" : "string",
+          "jobName" : "string",
+          "mobilePhone" : "string",
+          "specialInstructions" : "string",
+          "freightCharge" : "string",
+          "miscellaneousChargeCode" : "string",
+          "miscellaneousCharge" : "string",
+          "emailCC" : "string",
+          "shipMethod" : "string",
+          "billAttention" : "string",
+          "shipAddress" : {
+            "shipId" : "string",
+            "shipCompanyName" : "string",
+            "shipAddress1" : "string",
+            "shipAddress2" : "string",
+            "shipAddress3" : "string",
+            "shipCity" : "string",
+            "shipState" : "string",
+            "shipPostCode" : "string",
+            "shipCountry" : "string",
+            "shipPhone" : "string",
+            "shipFax" : "string",
+            "shipAttention" : "string",
+            "quoteRequest" : "string",
+            "validateOnly" : "string"
+          },
+          "lineItems" : {
+            "itemData" : [ {
+              "stockNum" : "string",
+              "qty" : "string",
+              "uom" : "string",
+              "price" : "string",
+              "mfgNum" : "string",
+              "description" : "string",
+              "lineComment" : "string"
+            } ]
+          },
+          "backOrderMethod" : "string",
+          "orderType" : "string",
+          "orderTypeDescription" : "string",
+          "emailTo" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Submit Order Request"
+    },
+    "Submit_Order_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "description" : "If the request was successful or not",
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "orderNumber" : {
+              "type" : "string"
+            },
+            "orderToken" : {
+              "type" : "string"
+            },
+            "DDIConfirmation" : {
+              "type" : "object",
+              "properties" : {
+                "shipAddress" : {
+                  "type" : "object",
+                  "properties" : {
+                    "shipNumber" : {
+                      "type" : "string"
+                    },
+                    "shipCompanyName" : {
+                      "type" : "string"
+                    },
+                    "shipAddress1" : {
+                      "type" : "string"
+                    },
+                    "shipAddress2" : {
+                      "type" : "string"
+                    },
+                    "shipAddress3" : {
+                      "type" : "string"
+                    },
+                    "shipCity" : {
+                      "type" : "string"
+                    },
+                    "shipState" : {
+                      "type" : "string"
+                    },
+                    "shipPostCode" : {
+                      "type" : "string"
+                    },
+                    "shipCountry" : {
+                      "type" : "string"
+                    },
+                    "shipPhone" : {
+                      "type" : "string"
+                    },
+                    "shipFax" : {
+                      "type" : "string"
+                    },
+                    "shipAttention" : {
+                      "type" : "string"
+                    }
+                  }
+                },
+                "billCompanyName" : {
+                  "type" : "string"
+                },
+                "billAddress1" : {
+                  "type" : "string"
+                },
+                "billAddress2" : {
+                  "type" : "string"
+                },
+                "billAddress3" : {
+                  "type" : "string"
+                },
+                "billCity" : {
+                  "type" : "string"
+                },
+                "billState" : {
+                  "type" : "string"
+                },
+                "billPostCode" : {
+                  "type" : "string"
+                },
+                "billPhone" : {
+                  "type" : "string"
+                },
+                "billFax" : {
+                  "type" : "string"
+                },
+                "billAttentions" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "orderDetails" : {
+              "type" : "object",
+              "properties" : {
+                "buyerName" : {
+                  "type" : "string"
+                },
+                "poNum" : {
+                  "type" : "string"
+                },
+                "jobName" : {
+                  "type" : "string"
+                },
+                "orderDate" : {
+                  "type" : "string"
+                },
+                "shipDate" : {
+                  "type" : "string"
+                },
+                "warehouse" : {
+                  "type" : "string"
+                },
+                "status" : {
+                  "type" : "string"
+                },
+                "ccEmail" : {
+                  "type" : "string"
+                },
+                "merchandiseTotal" : {
+                  "type" : "string"
+                },
+                "miscellaneousTotal" : {
+                  "type" : "string"
+                },
+                "freightTotal" : {
+                  "type" : "string"
+                },
+                "taxTotal" : {
+                  "type" : "string"
+                },
+                "orderTotal" : {
+                  "type" : "string"
+                },
+                "specialInstructions" : {
+                  "type" : "string"
+                },
+                "shipVia" : {
+                  "type" : "string"
+                },
+                "shipViaDescription" : {
+                  "type" : "string"
+                },
+                "truckDeliveryDays" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        },
+        "lineItems" : {
+          "type" : "object",
+          "properties" : {
+            "lineData" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "stockNum", "requestNum", "mfgNum", "description", "uom", "qty", "shipqty", "boqty", "netPrice", "extendedPrice", "availMessage", "lineComment" ],
+                "type" : "object",
+                "properties" : {
+                  "stockNum" : {
+                    "type" : "string"
+                  },
+                  "requestNum" : {
+                    "type" : "string"
+                  },
+                  "mfgNum" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "uom" : {
+                    "type" : "string"
+                  },
+                  "qty" : {
+                    "type" : "string"
+                  },
+                  "shipqty" : {
+                    "type" : "string"
+                  },
+                  "boqty" : {
+                    "type" : "string"
+                  },
+                  "netPrice" : {
+                    "type" : "string"
+                  },
+                  "extendedPrice" : {
+                    "type" : "string"
+                  },
+                  "availMessage" : {
+                    "type" : "string"
+                  },
+                  "lineComment" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "orderNumber" : "string",
+          "orderToken" : "string",
+          "DDIConfirmation" : {
+            "shipAddress" : {
+              "shipNumber" : "string",
+              "shipCompanyName" : "string",
+              "shipAddress1" : "string",
+              "shipAddress2" : "string",
+              "shipAddress3" : "string",
+              "shipCity" : "string",
+              "shipState" : "string",
+              "shipPostCode" : "string",
+              "shipCountry" : "string",
+              "shipPhone" : "string",
+              "shipFax" : "string",
+              "shipAttention" : "string"
+            },
+            "billCompanyName" : "string",
+            "billAddress1" : "string",
+            "billAddress2" : "string",
+            "billAddress3" : "string",
+            "billCity" : "string",
+            "billState" : "string",
+            "billPostCode" : "string",
+            "billPhone" : "string",
+            "billFax" : "string",
+            "billAttentions" : "string"
+          },
+          "orderDetails" : {
+            "buyerName" : "string",
+            "poNum" : "string",
+            "jobName" : "string",
+            "orderDate" : "string",
+            "shipDate" : "string",
+            "warehouse" : "string",
+            "status" : "string",
+            "ccEmail" : "string",
+            "merchandiseTotal" : "string",
+            "miscellaneousTotal" : "string",
+            "freightTotal" : "string",
+            "taxTotal" : "string",
+            "orderTotal" : "string",
+            "specialInstructions" : "string",
+            "shipVia" : "string",
+            "shipViaDescription" : "string",
+            "truckDeliveryDays" : "string"
+          }
+        },
+        "lineItems" : {
+          "lineData" : [ {
+            "stockNum" : "string",
+            "requestNum" : "string",
+            "mfgNum" : "string",
+            "description" : "string",
+            "uom" : "string",
+            "qty" : "string",
+            "shipqty" : "string",
+            "boqty" : "string",
+            "netPrice" : "string",
+            "extendedPrice" : "string",
+            "availMessage" : "string",
+            "lineComment" : "string"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Submit Order Response"
+    },
+    "Price_Stock_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "required" : [ "accountNumber", "itemList" ],
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "description" : "API username provided by DDI",
+              "type" : "string"
+            },
+            "password" : {
+              "description" : "API password provided by DDI",
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "description" : "API passphrase provided by DDI",
+              "type" : "string"
+            },
+            "token" : {
+              "description" : "Token returned from the Validate User call",
+              "type" : "string"
+            },
+            "userId" : {
+              "description" : "The contact number returned from the Validate User call",
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "description" : "The account number returned from the Validate User call",
+              "type" : "string"
+            },
+            "branch" : {
+              "description" : "The branch number returned from the Validate User call",
+              "type" : "string"
+            },
+            "allWarehouse" : {
+              "description" : "Include stock for all warehouses, not just the warehouse associated to the branch number returned from the Validate User call",
+              "type" : "string"
+            },
+            "priceOnly" : {
+              "description" : "Set to \"N\"",
+              "type" : "string"
+            },
+            "stockOnly" : {
+              "description" : "Set to \"N\"",
+              "type" : "string"
+            },
+            "itemList" : {
+              "description" : "Array of product codes and quantity",
+              "type" : "array",
+              "items" : {
+                "required" : [ "stockNum" ],
+                "type" : "object",
+                "properties" : {
+                  "stockNum" : {
+                    "description" : "The product code you are checking price and stock for",
+                    "type" : "string"
+                  },
+                  "quantity" : {
+                    "description" : "The intended purchase quantity (default to 1)",
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "ThirdPartyName",
+          "password" : "xxPasswordxx",
+          "passPhrase" : "xxPassPhrasexx",
+          "token" : "VTJTYWx0ZWTJ8Dd8yHR3D+zkr346ADozZ8ho5PcR9MblrD8Td6jzKA==",
+          "userId" : "0004",
+          "accountNumber" : "0001588",
+          "branch" : "01",
+          "allWarehouse" : "Y",
+          "priceOnly" : "N",
+          "stockOnly" : "N",
+          "itemList" : [ {
+            "stockNum" : "BPC T16SMILEY",
+            "quantity" : "1"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Price Stock Request"
+    },
+    "Price_Stock_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "description" : "Yes if the userId (email address) is found on Active accountNumber Contact record(s) and the token is valid for the session and the request parameters are valid.  No if none of the previous criteria are met.",
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "description" : "Account Number used for requesting price and stock",
+              "type" : "string"
+            },
+            "branch" : {
+              "description" : "Default branch assigned to the account/user",
+              "type" : "string"
+            },
+            "itemData" : {
+              "description" : "Contains the array elements of the product code(s) you are checking price and stock for",
+              "type" : "array",
+              "items" : {
+                "required" : [ "lineItem", "prices" ],
+                "type" : "object",
+                "properties" : {
+                  "lineItem" : {
+                    "description" : "Contains information for each individual product code",
+                    "type" : "object",
+                    "properties" : {
+                      "stockNum" : {
+                        "description" : "Product code returned based on requestNum",
+                        "type" : "string"
+                      },
+                      "requestNum" : {
+                        "description" : "This is the product code you requested",
+                        "type" : "string"
+                      },
+                      "custNum" : {
+                        "description" : "Customer Part \\#",
+                        "type" : "string"
+                      },
+                      "certCode" : {
+                        "description" : "Cert Code required to purchase",
+                        "type" : "string"
+                      },
+                      "uom" : {
+                        "description" : "Unit of Measures",
+                        "type" : "object",
+                        "properties" : {
+                          "uomCode" : {
+                            "description" : "Unit of Measure code",
+                            "type" : "string"
+                          },
+                          "uomDesc" : {
+                            "description" : "Unit of Measure Description (if available)",
+                            "type" : "string"
+                          },
+                          "uomFactors" : {
+                            "description" : "Unit of Measure factor array",
+                            "type" : "array",
+                            "items" : {
+                              "required" : [ "uomFactor", "altUomCode", "altUomDesc", "price" ],
+                              "type" : "object",
+                              "properties" : {
+                                "uomFactor" : {
+                                  "description" : "Unit of Measure factor",
+                                  "type" : "string"
+                                },
+                                "altUomCode" : {
+                                  "description" : "Unit of Measure code",
+                                  "type" : "string"
+                                },
+                                "altUomDesc" : {
+                                  "description" : "Unit of Measure Description (if available)",
+                                  "type" : "string"
+                                },
+                                "price" : {
+                                  "description" : "Price associated to unit of measure",
+                                  "type" : "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "totalAvailable" : {
+                        "description" : "The quantity \"On Hand\" at \"All Warehouses\"",
+                        "type" : "string"
+                      },
+                      "locations" : {
+                        "description" : "Contains the array elements for each warehouse",
+                        "type" : "array",
+                        "items" : {
+                          "required" : [ "available", "backorder", "requestQty", "warehouse", "branchName", "branchAdd1", "branchCity", "branchState", "branchPostCost" ],
+                          "type" : "object",
+                          "properties" : {
+                            "available" : {
+                              "description" : "Physical quantity at warehouse",
+                              "type" : "string"
+                            },
+                            "backorder" : {
+                              "description" : "Is item on backorder (yes/no)",
+                              "type" : "string"
+                            },
+                            "requestQty" : {
+                              "description" : "The intended purchase quantity",
+                              "type" : "string"
+                            },
+                            "warehouse" : {
+                              "description" : "The numeric code of the Warehouse",
+                              "type" : "string"
+                            },
+                            "branchName" : {
+                              "description" : "The warehouse Full Name",
+                              "type" : "string"
+                            },
+                            "branchAdd1" : {
+                              "description" : "Address",
+                              "type" : "string"
+                            },
+                            "branchCity" : {
+                              "description" : "City",
+                              "type" : "string"
+                            },
+                            "branchState" : {
+                              "description" : "State",
+                              "type" : "string"
+                            },
+                            "branchPostCost" : {
+                              "description" : "Zip Code",
+                              "type" : "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "prices" : {
+                    "description" : "Price object containing list and net price",
+                    "type" : "object",
+                    "properties" : {
+                      "listPrice" : {
+                        "description" : "List Price",
+                        "type" : "string"
+                      },
+                      "netPrice" : {
+                        "description" : "Net Price",
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "itemData" : [ {
+            "lineItem" : {
+              "stockNum" : "string",
+              "requestNum" : "string",
+              "custNum" : "string",
+              "certCode" : "string",
+              "uom" : {
+                "uomCode" : "string",
+                "uomDesc" : "string",
+                "uomFactors" : [ {
+                  "uomFactor" : "string",
+                  "altUomCode" : "string",
+                  "altUomDesc" : "string",
+                  "price" : "string"
+                } ]
+              },
+              "totalAvailable" : "string",
+              "locations" : [ {
+                "available" : "string",
+                "backorder" : "string",
+                "requestQty" : "string",
+                "warehouse" : "string",
+                "branchName" : "string",
+                "branchAdd1" : "string",
+                "branchCity" : "string",
+                "branchState" : "string",
+                "branchPostCost" : "string"
+              } ]
+            },
+            "prices" : {
+              "listPrice" : "string",
+              "netPrice" : "string"
+            }
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Price Stock Response"
+    },
+    "Register_Hook" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "name" : {
+              "type" : "string"
+            },
+            "event" : {
+              "type" : "string"
+            },
+            "webhookUrl" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "name" : "string",
+          "event" : "string",
+          "webhookUrl" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Register Hook"
+    },
+    "Register_Hook_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "id" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "event" : {
+              "type" : "string"
+            },
+            "webhookUrl" : {
+              "type" : "string"
+            },
+            "createdAt" : {
+              "type" : "string"
+            },
+            "updatedAt" : {
+              "type" : "string"
+            },
+            "secret" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "id" : "string",
+          "name" : "string",
+          "event" : "string",
+          "webhookUrl" : "string",
+          "createdAt" : "string",
+          "updatedAt" : "string",
+          "secret" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Register Hook Response"
+    },
+    "Triggered_Hook" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "event" : {
+              "type" : "string"
+            },
+            "parentId" : {
+              "type" : "string"
+            },
+            "recordId" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "event" : "string",
+          "parentId" : "string",
+          "recordId" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Triggered Hook"
+    },
+    "Customer_Ledger_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "accountNumber" : "string",
+          "userId" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Customer Ledger Request"
+    },
+    "Submit_Payment_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "paymentDate" : {
+              "type" : "string"
+            },
+            "paymentInfo" : {
+              "type" : "object",
+              "properties" : {
+                "cashTendered" : {
+                  "type" : "string"
+                },
+                "methodOfPayment" : {
+                  "type" : "string"
+                },
+                "creditCardType" : {
+                  "type" : "string"
+                },
+                "creditCardNumber" : {
+                  "type" : "string"
+                },
+                "creditCardName" : {
+                  "type" : "string"
+                },
+                "creditCardApprovalCode" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "invoicesToPay" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "invoiceDate", "invoiceNumber", "paymentAmount" ],
+                "type" : "object",
+                "properties" : {
+                  "invoiceDate" : {
+                    "type" : "string"
+                  },
+                  "invoiceNumber" : {
+                    "type" : "string"
+                  },
+                  "paymentAmount" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "x-apim-schema-name" : "Submit Payment Request"
+    },
+    "Submit_Payment_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "submittedPayment" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "accountNumber", "customerName", "paymentAmount" ],
+                "type" : "object",
+                "properties" : {
+                  "accountNumber" : {
+                    "type" : "string"
+                  },
+                  "customerName" : {
+                    "type" : "string"
+                  },
+                  "paymentAmount" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "x-apim-schema-name" : "Submit Payment Response"
+    },
+    "Shipto_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "x-apim-schema-name" : "Shipto Request"
+    },
+    "Shipto_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "shipTos" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "shipNumber", "shipCompanyName", "shipName", "shipAddress1", "shipAddress2", "shipAddress3", "shipCity", "shipState", "shipPostCode", "shipCountry", "shipPhone", "shipFax", "shipMethod", "timeDate", "approveSalesOrder" ],
+                "type" : "object",
+                "properties" : {
+                  "shipNumber" : {
+                    "type" : "string"
+                  },
+                  "shipCompanyName" : {
+                    "type" : "string"
+                  },
+                  "shipName" : {
+                    "type" : "string"
+                  },
+                  "shipAddress1" : {
+                    "type" : "string"
+                  },
+                  "shipAddress2" : {
+                    "type" : "string"
+                  },
+                  "shipAddress3" : {
+                    "type" : "string"
+                  },
+                  "shipCity" : {
+                    "type" : "string"
+                  },
+                  "shipState" : {
+                    "type" : "string"
+                  },
+                  "shipPostCode" : {
+                    "type" : "string"
+                  },
+                  "shipCountry" : {
+                    "type" : "string"
+                  },
+                  "shipPhone" : {
+                    "type" : "string"
+                  },
+                  "shipFax" : {
+                    "type" : "string"
+                  },
+                  "shipMethod" : {
+                    "type" : "string"
+                  },
+                  "timeDate" : {
+                    "type" : "string"
+                  },
+                  "approveSalesOrder" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "x-apim-schema-name" : "Shipto Response"
+    },
+    "Invoice_Detail_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "invoiceNumber" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "userId" : "string",
+          "invoiceNumber" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Invoice Detail Request"
+    },
+    "Invoice_Detail_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "invoiceNumber" : {
+              "type" : "string"
+            },
+            "shipAddress" : {
+              "type" : "object",
+              "properties" : {
+                "shipNumber" : {
+                  "type" : "string"
+                },
+                "shipCompanyName" : {
+                  "type" : "string"
+                },
+                "shipAddress1" : {
+                  "type" : "string"
+                },
+                "shipAddress2" : {
+                  "type" : "string"
+                },
+                "shipAddress3" : {
+                  "type" : "string"
+                },
+                "shipCity" : {
+                  "type" : "string"
+                },
+                "shipState" : {
+                  "type" : "string"
+                },
+                "shipPostCode" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "billAddress" : {
+              "type" : "object",
+              "properties" : {
+                "billCompanyName" : {
+                  "type" : "string"
+                },
+                "billAddress1" : {
+                  "type" : "string"
+                },
+                "billAddress2" : {
+                  "type" : "string"
+                },
+                "billAddress3" : {
+                  "type" : "string"
+                },
+                "billCity" : {
+                  "type" : "string"
+                },
+                "billState" : {
+                  "type" : "string"
+                },
+                "billPostCode" : {
+                  "type" : "string"
+                },
+                "billCountry" : {
+                  "type" : "string"
+                },
+                "billPhone" : {
+                  "type" : "string"
+                },
+                "billFax" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "invoiceDetails" : {
+              "type" : "object",
+              "properties" : {
+                "buyerName" : {
+                  "type" : "string"
+                },
+                "poNum" : {
+                  "type" : "string"
+                },
+                "jobName" : {
+                  "type" : "string"
+                },
+                "invoiceDate" : {
+                  "type" : "string"
+                },
+                "shipDate" : {
+                  "type" : "string"
+                },
+                "dueDate" : {
+                  "type" : "string"
+                },
+                "warehouse" : {
+                  "type" : "string"
+                },
+                "invoiceStatus" : {
+                  "type" : "string"
+                },
+                "orderNumber" : {
+                  "type" : "string"
+                },
+                "operator" : {
+                  "type" : "string"
+                },
+                "merchandiseTotal" : {
+                  "type" : "string"
+                },
+                "miscellaneousTotal" : {
+                  "type" : "string"
+                },
+                "freightTotal" : {
+                  "type" : "string"
+                },
+                "taxTotal" : {
+                  "type" : "string"
+                },
+                "invoiceTotal" : {
+                  "type" : "string"
+                },
+                "specialInstructions" : {
+                  "type" : "string"
+                },
+                "shipMethod" : {
+                  "type" : "object",
+                  "properties" : {
+                    "shipVia" : {
+                      "type" : "string"
+                    },
+                    "shipViaDescription" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            },
+            "lineItems" : {
+              "type" : "object",
+              "properties" : {
+                "lineData" : {
+                  "type" : "array",
+                  "items" : {
+                    "required" : [ "stockNum", "mfgNum", "description", "qty", "shipQty", "boQty", "netPrice", "extendedPrice", "lineItemComment", "serialNumbers" ],
+                    "type" : "object",
+                    "properties" : {
+                      "stockNum" : {
+                        "type" : "string"
+                      },
+                      "mfgNum" : {
+                        "type" : "string"
+                      },
+                      "description" : {
+                        "type" : "string"
+                      },
+                      "qty" : {
+                        "type" : "string"
+                      },
+                      "shipQty" : {
+                        "type" : "string"
+                      },
+                      "boQty" : {
+                        "type" : "string"
+                      },
+                      "netPrice" : {
+                        "type" : "string"
+                      },
+                      "extendedPrice" : {
+                        "type" : "string"
+                      },
+                      "lineItemComment" : {
+                        "type" : "string"
+                      },
+                      "serialNumbers" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "invoiceNumber" : "string",
+          "shipAddress" : {
+            "shipNumber" : "string",
+            "shipCompanyName" : "string",
+            "shipAddress1" : "string",
+            "shipAddress2" : "string",
+            "shipAddress3" : "string",
+            "shipCity" : "string",
+            "shipState" : "string",
+            "shipPostCode" : "string"
+          },
+          "billAddress" : {
+            "billCompanyName" : "string",
+            "billAddress1" : "string",
+            "billAddress2" : "string",
+            "billAddress3" : "string",
+            "billCity" : "string",
+            "billState" : "string",
+            "billPostCode" : "string",
+            "billCountry" : "string",
+            "billPhone" : "string",
+            "billFax" : "string"
+          },
+          "invoiceDetails" : {
+            "buyerName" : "string",
+            "poNum" : "string",
+            "jobName" : "string",
+            "invoiceDate" : "string",
+            "shipDate" : "string",
+            "dueDate" : "string",
+            "warehouse" : "string",
+            "invoiceStatus" : "string",
+            "orderNumber" : "string",
+            "operator" : "string",
+            "merchandiseTotal" : "string",
+            "miscellaneousTotal" : "string",
+            "freightTotal" : "string",
+            "taxTotal" : "string",
+            "invoiceTotal" : "string",
+            "specialInstructions" : "string",
+            "shipMethod" : {
+              "shipVia" : "string",
+              "shipViaDescription" : "string"
+            }
+          },
+          "lineItems" : {
+            "lineData" : [ {
+              "stockNum" : "string",
+              "mfgNum" : "string",
+              "description" : "string",
+              "qty" : "string",
+              "shipQty" : "string",
+              "boQty" : "string",
+              "netPrice" : "string",
+              "extendedPrice" : "string",
+              "lineItemComment" : "string",
+              "serialNumbers" : "string"
+            } ]
+          }
+        }
+      },
+      "x-apim-schema-name" : "Invoice Detail Response"
+    },
+    "Invoice_List_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "openOnly" : {
+              "type" : "string"
+            },
+            "dateRange" : {
+              "type" : "object",
+              "properties" : {
+                "startDate" : {
+                  "type" : "string"
+                },
+                "endDate" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "userId" : "string",
+          "openOnly" : "string",
+          "dateRange" : {
+            "startDate" : "string",
+            "endDate" : "string"
+          }
+        }
+      },
+      "x-apim-schema-name" : "Invoice List Request"
+    },
+    "Invoice_List_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "invoiceList" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "invoiceNumber", "poNum", "jobName", "invoiceDate", "shipDate", "dueDate", "orderNumber", "warehouse", "invoiceStatus", "miscTotal", "merchandiseTotal", "freightTotal", "taxTotal", "invoiceTotal", "openAmount" ],
+                "type" : "object",
+                "properties" : {
+                  "invoiceNumber" : {
+                    "type" : "string"
+                  },
+                  "poNum" : {
+                    "type" : "string"
+                  },
+                  "jobName" : {
+                    "type" : "string"
+                  },
+                  "invoiceDate" : {
+                    "type" : "string"
+                  },
+                  "shipDate" : {
+                    "type" : "string"
+                  },
+                  "dueDate" : {
+                    "type" : "string"
+                  },
+                  "orderNumber" : {
+                    "type" : "string"
+                  },
+                  "warehouse" : {
+                    "type" : "string"
+                  },
+                  "invoiceStatus" : {
+                    "type" : "string"
+                  },
+                  "miscTotal" : {
+                    "type" : "string"
+                  },
+                  "merchandiseTotal" : {
+                    "type" : "string"
+                  },
+                  "freightTotal" : {
+                    "type" : "string"
+                  },
+                  "taxTotal" : {
+                    "type" : "string"
+                  },
+                  "invoiceTotal" : {
+                    "type" : "string"
+                  },
+                  "openAmount" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "branch" : "string",
+          "accountNumber" : "string",
+          "invoiceList" : [ {
+            "invoiceNumber" : "string",
+            "poNum" : "string",
+            "jobName" : "string",
+            "invoiceDate" : "string",
+            "shipDate" : "string",
+            "dueDate" : "string",
+            "orderNumber" : "string",
+            "warehouse" : "string",
+            "invoiceStatus" : "string",
+            "miscTotal" : "string",
+            "merchandiseTotal" : "string",
+            "freightTotal" : "string",
+            "taxTotal" : "string",
+            "invoiceTotal" : "string",
+            "openAmount" : "string"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Invoice List Response"
+    },
+    "Order_Detail_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "orderNumber" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "userId" : "string",
+          "orderNumber" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Order Detail Request"
+    },
+    "Order_Detail_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "orderNumber" : {
+              "type" : "string"
+            },
+            "shipAddress" : {
+              "type" : "object",
+              "properties" : {
+                "shipNumber" : {
+                  "type" : "string"
+                },
+                "shipCompanyName" : {
+                  "type" : "string"
+                },
+                "shipAddress1" : {
+                  "type" : "string"
+                },
+                "shipAddress2" : {
+                  "type" : "string"
+                },
+                "shipAddress3" : {
+                  "type" : "string"
+                },
+                "shipCity" : {
+                  "type" : "string"
+                },
+                "shipState" : {
+                  "type" : "string"
+                },
+                "shipPostCode" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "billAddress" : {
+              "type" : "object",
+              "properties" : {
+                "billCompanyName" : {
+                  "type" : "string"
+                },
+                "billAddress1" : {
+                  "type" : "string"
+                },
+                "billAddress2" : {
+                  "type" : "string"
+                },
+                "billAddress3" : {
+                  "type" : "string"
+                },
+                "billCity" : {
+                  "type" : "string"
+                },
+                "billState" : {
+                  "type" : "string"
+                },
+                "billPostCode" : {
+                  "type" : "string"
+                },
+                "billCountry" : {
+                  "type" : "string"
+                },
+                "billPhone" : {
+                  "type" : "string"
+                },
+                "billFax" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "orderDetails" : {
+              "type" : "object",
+              "properties" : {
+                "buyerName" : {
+                  "type" : "string"
+                },
+                "poNum" : {
+                  "type" : "string"
+                },
+                "jobName" : {
+                  "type" : "string"
+                },
+                "orderDate" : {
+                  "type" : "string"
+                },
+                "shipDate" : {
+                  "type" : "string"
+                },
+                "warehouse" : {
+                  "type" : "string"
+                },
+                "orderStatus" : {
+                  "type" : "string"
+                },
+                "operator" : {
+                  "type" : "string"
+                },
+                "merchandiseTotal" : {
+                  "type" : "string"
+                },
+                "miscellaneousTotal" : {
+                  "type" : "string"
+                },
+                "freightTotal" : {
+                  "type" : "string"
+                },
+                "taxTotal" : {
+                  "type" : "string"
+                },
+                "orderTotal" : {
+                  "type" : "string"
+                },
+                "specialInstructions" : {
+                  "type" : "string"
+                },
+                "shipMethod" : {
+                  "type" : "object",
+                  "properties" : {
+                    "shipVia" : {
+                      "type" : "string"
+                    },
+                    "shipViaDescription" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            },
+            "lineItems" : {
+              "type" : "object",
+              "properties" : {
+                "lineData" : {
+                  "type" : "array",
+                  "items" : {
+                    "required" : [ "stockNum", "mfgNum", "description", "qty", "shipQty", "boQty", "uom", "netPrice", "extendedPrice", "lineItemComment", "serialNumbers" ],
+                    "type" : "object",
+                    "properties" : {
+                      "stockNum" : {
+                        "type" : "string"
+                      },
+                      "mfgNum" : {
+                        "type" : "string"
+                      },
+                      "description" : {
+                        "type" : "string"
+                      },
+                      "qty" : {
+                        "type" : "string"
+                      },
+                      "shipQty" : {
+                        "type" : "string"
+                      },
+                      "boQty" : {
+                        "type" : "string"
+                      },
+                      "uom" : {
+                        "type" : "string"
+                      },
+                      "netPrice" : {
+                        "type" : "string"
+                      },
+                      "extendedPrice" : {
+                        "type" : "string"
+                      },
+                      "lineItemComment" : {
+                        "type" : "string"
+                      },
+                      "serialNumbers" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "orderNumber" : "string",
+          "shipAddress" : {
+            "shipNumber" : "string",
+            "shipCompanyName" : "string",
+            "shipAddress1" : "string",
+            "shipAddress2" : "string",
+            "shipAddress3" : "string",
+            "shipCity" : "string",
+            "shipState" : "string",
+            "shipPostCode" : "string"
+          },
+          "billAddress" : {
+            "billCompanyName" : "string",
+            "billAddress1" : "string",
+            "billAddress2" : "string",
+            "billAddress3" : "string",
+            "billCity" : "string",
+            "billState" : "string",
+            "billPostCode" : "string",
+            "billCountry" : "string",
+            "billPhone" : "string",
+            "billFax" : "string"
+          },
+          "orderDetails" : {
+            "buyerName" : "string",
+            "poNum" : "string",
+            "jobName" : "string",
+            "orderDate" : "string",
+            "shipDate" : "string",
+            "warehouse" : "string",
+            "orderStatus" : "string",
+            "operator" : "string",
+            "merchandiseTotal" : "string",
+            "miscellaneousTotal" : "string",
+            "freightTotal" : "string",
+            "taxTotal" : "string",
+            "orderTotal" : "string",
+            "specialInstructions" : "string",
+            "shipMethod" : {
+              "shipVia" : "string",
+              "shipViaDescription" : "string"
+            }
+          },
+          "lineItems" : {
+            "lineData" : [ {
+              "stockNum" : "string",
+              "mfgNum" : "string",
+              "description" : "string",
+              "qty" : "string",
+              "shipQty" : "string",
+              "boQty" : "string",
+              "uom" : "string",
+              "netPrice" : "string",
+              "extendedPrice" : "string",
+              "lineItemComment" : "string",
+              "serialNumbers" : "string"
+            } ]
+          }
+        }
+      },
+      "x-apim-schema-name" : "Order Detail Response"
+    },
+    "Order_List_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "dateRange" : {
+              "type" : "object",
+              "properties" : {
+                "startDate" : {
+                  "type" : "string"
+                },
+                "endDate" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "accountNumber" : "string",
+          "userId" : "string",
+          "dateRange" : {
+            "startDate" : "string",
+            "endDate" : "string"
+          }
+        }
+      },
+      "x-apim-schema-name" : "Order List Request"
+    },
+    "Order_List_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "orderList" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "orderNumber", "poNum", "jobName", "orderDate", "shipDate", "invoiceNumber", "warehouse", "orderStatus", "miscTotal", "merchandiseTotal", "freightTotal", "taxTotal", "orderTotal" ],
+                "type" : "object",
+                "properties" : {
+                  "orderNumber" : {
+                    "type" : "string"
+                  },
+                  "poNum" : {
+                    "type" : "string"
+                  },
+                  "jobName" : {
+                    "type" : "string"
+                  },
+                  "orderDate" : {
+                    "type" : "string"
+                  },
+                  "shipDate" : {
+                    "type" : "string"
+                  },
+                  "invoiceNumber" : {
+                    "type" : "string"
+                  },
+                  "warehouse" : {
+                    "type" : "string"
+                  },
+                  "orderStatus" : {
+                    "type" : "string"
+                  },
+                  "miscTotal" : {
+                    "type" : "string"
+                  },
+                  "merchandiseTotal" : {
+                    "type" : "string"
+                  },
+                  "freightTotal" : {
+                    "type" : "string"
+                  },
+                  "taxTotal" : {
+                    "type" : "string"
+                  },
+                  "orderTotal" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "branch" : "string",
+          "accountNumber" : "string",
+          "orderList" : [ {
+            "orderNumber" : "string",
+            "poNum" : "string",
+            "jobName" : "string",
+            "orderDate" : "string",
+            "shipDate" : "string",
+            "invoiceNumber" : "string",
+            "warehouse" : "string",
+            "orderStatus" : "string",
+            "miscTotal" : "string",
+            "merchandiseTotal" : "string",
+            "freightTotal" : "string",
+            "taxTotal" : "string",
+            "orderTotal" : "string"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Order List Response"
+    },
+    "Order_Pad_Request" : {
+      "type" : "object",
+      "properties" : {
+        "DDIRequest" : {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "password" : {
+              "type" : "string"
+            },
+            "passPhrase" : {
+              "type" : "string"
+            },
+            "token" : {
+              "type" : "string"
+            },
+            "accountNumber" : {
+              "type" : "string"
+            },
+            "branch" : {
+              "type" : "string"
+            },
+            "userId" : {
+              "type" : "string"
+            },
+            "shipNumber" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIRequest" : {
+          "userName" : "string",
+          "password" : "string",
+          "passPhrase" : "string",
+          "token" : "string",
+          "accountNumber" : "string",
+          "branch" : "string",
+          "userId" : "string",
+          "shipNumber" : "string"
+        }
+      },
+      "x-apim-schema-name" : "Order Pad Request"
+    },
+    "Order_Pad_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "totalLines" : {
+              "type" : "string"
+            },
+            "pagination" : {
+              "type" : "string"
+            },
+            "orderPad" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "stockNum", "description", "uom", "price", "webCategory", "webCategoryDesc", "lastDate", "lastQty", "custPartNum" ],
+                "type" : "object",
+                "properties" : {
+                  "stockNum" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "uom" : {
+                    "type" : "string"
+                  },
+                  "price" : {
+                    "type" : "string"
+                  },
+                  "webCategory" : {
+                    "type" : "string"
+                  },
+                  "webCategoryDesc" : {
+                    "type" : "string"
+                  },
+                  "lastDate" : {
+                    "type" : "string"
+                  },
+                  "lastQty" : {
+                    "type" : "string"
+                  },
+                  "custPartNum" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "totalLines" : "string",
+          "pagination" : "string",
+          "orderPad" : [ {
+            "stockNum" : "string",
+            "description" : "string",
+            "uom" : "string",
+            "price" : "string",
+            "webCategory" : "string",
+            "webCategoryDesc" : "string",
+            "lastDate" : "string",
+            "lastQty" : "string",
+            "custPartNum" : "string"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Order Pad Response"
+    },
+    "Customer_Ledger_Response" : {
+      "type" : "object",
+      "properties" : {
+        "DDIResponse" : {
+          "type" : "object",
+          "properties" : {
+            "isValid" : {
+              "type" : "string"
+            },
+            "receivableAging" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "arBalance", "oldestOpenInvoiceDays", "Current", "30 Days", "60 Days", "90 Days", "120 & Over" ],
+                "type" : "object",
+                "properties" : {
+                  "arBalance" : {
+                    "type" : "string"
+                  },
+                  "oldestOpenInvoiceDays" : {
+                    "type" : "string"
+                  },
+                  "Current" : {
+                    "type" : "string"
+                  },
+                  "30 Days" : {
+                    "type" : "string"
+                  },
+                  "60 Days" : {
+                    "type" : "string"
+                  },
+                  "90 Days" : {
+                    "type" : "string"
+                  },
+                  "120 & Over" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example" : {
+        "DDIResponse" : {
+          "isValid" : "string",
+          "receivableAging" : [ {
+            "arBalance" : "string",
+            "oldestOpenInvoiceDays" : "string",
+            "Current" : "string",
+            "30 Days" : "string",
+            "60 Days" : "string",
+            "90 Days" : "string",
+            "120 & Over" : "string"
+          } ]
+        }
+      },
+      "x-apim-schema-name" : "Customer Ledger Response"
+    }
+  },
+  "parameters" : { },
+  "responses" : { },
+  "securityDefinitions" : {
+    "apiKeyHeader" : {
+      "type" : "apiKey",
+      "name" : "Ocp-Apim-Subscription-Key",
+      "in" : "header"
+    }
+  },
+  "security" : [ {
+    "apiKeyHeader" : [ ]
+  } ],
+  "tags" : [ ],
+  "x-ms-openai-manifest" : {
+    "humanName" : "Inform ERP Connector",
+    "modelDescription" : "Manages operations around orders, invoices, pricing, and stock availability",
+    "contactEmail" : "ddisystem.development@advantive.com",
+    "legalUrl" : "https://www.advantive.com/privacy-policy/"
+  }
+}
